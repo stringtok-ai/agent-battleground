@@ -1,0 +1,47 @@
+databases:
+  - name: agent-battleground-db
+    plan: free
+    databaseName: agent_battleground
+    user: postgres
+
+services:
+  - type: web
+    name: agent-battleground-api
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: POSTGRES_USER
+        fromDatabase:
+          name: agent-battleground-db
+          property: user
+      - key: POSTGRES_PASSWORD
+        fromDatabase:
+          name: agent-battleground-db
+          property: password
+      - key: POSTGRES_DB
+        fromDatabase:
+          name: agent-battleground-db
+          property: database
+      - key: POSTGRES_HOST
+        fromDatabase:
+          name: agent-battleground-db
+          property: host
+      - key: POSTGRES_PORT
+        fromDatabase:
+          name: agent-battleground-db
+          property: port
+      - key: REDIS_URL
+        value: redis://localhost:6379/0
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: "30"
+      - key: REFRESH_TOKEN_EXPIRE_DAYS
+        value: "7"
+      - key: DEMO_AUTO_RUN
+        value: "1"
+      - key: SEED_MODE
+        value: fast
