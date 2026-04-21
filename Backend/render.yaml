@@ -2,13 +2,15 @@ databases:
   - name: agent-battleground-db
     plan: free
     databaseName: agent_battleground
-    user: postgres
 
 services:
   - type: web
     name: agent-battleground-api
     runtime: docker
     plan: free
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    rootDir: Backend
     healthCheckPath: /health
     envVars:
       - key: POSTGRES_USER
@@ -32,7 +34,7 @@ services:
           name: agent-battleground-db
           property: port
       - key: REDIS_URL
-        value: redis://localhost:6379/0
+        value: ""
       - key: JWT_SECRET
         generateValue: true
       - key: JWT_ALGORITHM
